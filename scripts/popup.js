@@ -1,6 +1,30 @@
 var allLinks = [];
 var visibleLinks = [];
 var courseName = "";
+var linksMessageReceived = false;
+
+function showMessage(message) {
+  document.getElementById('pText').innerText = message;
+  document.getElementById('pText').style.display = 'block';
+}
+
+function hideMessage() {
+  document.getElementById('pText').style.display = 'none';
+}
+
+function hideSelectionUi() {
+  document.getElementById('download0').style.display = 'none';
+  document.getElementById('download1').style.display = 'none';
+  document.getElementById('toggle_all').style.display = 'none';
+  document.getElementById('selectAllRow').style.display = 'none';
+}
+
+function showSelectionUi() {
+  document.getElementById('download0').style.display = 'block';
+  document.getElementById('download1').style.display = 'block';
+  document.getElementById('toggle_all').style.display = 'inline-block';
+  document.getElementById('selectAllRow').style.display = 'block';
+}
 
 function sanitizeFilename(name) {
   // Replace invalid characters for filenames/folders
@@ -105,31 +129,28 @@ function downloadCheckedLinks() {
 
 // Replace the deprecated API //send_links.js is injected into all frames of the active tab
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.type === "links") {
-    var sections = message.data;
-    courseName = message.courseName || "";
-    allLinks = sections.map(section => ({
-      title: section.sectionTitle,
-      files: section.links.map((link, i) => ({url: link, name: section.file_names[i]}))
-    })).filter(section => section.files.length > 0);
+  if (message.type !== "links") {
+    return;
   }
+
+  linksMessageReceived = true;
+  var sections = Array.isArray(message.data) ? message.data : [];
+  courseName = message.courseName || "";
+  allLinks = sections.map(section => ({
+    title: section.sectionTitle,
+    files: section.links.map((link, i) => ({url: link, name: section.file_names[i]}))
+  })).filter(section => section.files.length > 0);
 
   visibleLinks = allLinks;
   showLinks();
   document.getElementById('courseName').innerText = courseName;
   // hide or show buttons
-  if(!visibleLinks.length)
-  {
-	document.getElementById('pText').innerText = "Navigate to Piazza Resources to download available files";
-	document.getElementById('pText').style.display = "block";
-  }
-  else
-  {
-	document.getElementById('pText').style.display = "none";
-	document.getElementById("download0").style.display = "block";
-	document.getElementById("download1").style.display = "block";
-  document.getElementById("toggle_all").style.display = "inline-block";
-  document.getElementById("selectAllRow").style.display = "block";
+  if (!visibleLinks.length) {
+    hideSelectionUi();
+    showMessage("No downloadable resources found on this page.");
+  } else {
+    hideMessage();
+    showSelectionUi();
   }
 });
 
@@ -138,16 +159,45 @@ window.onload = function() {
   document.getElementById('download0').onclick = downloadCheckedLinks;
   document.getElementById('download1').onclick = downloadCheckedLinks;
   document.getElementById('toggle_all').onchange = toggleAll;
+  hideSelectionUi();
+  showMessage("Open a Piazza Resources page to download available files.");
+
   chrome.windows.getCurrent(function (currentWindow) {
-	  chrome.tabs.query({active: true, windowId: currentWindow.id},
+    chrome.tabs.query({active: true, windowId: currentWindow.id},
                       function(activeTabs) {
+      var activeTab = activeTabs && activeTabs[0] ? activeTabs[0] : null;
+      var activeUrl = activeTab && activeTab.url ? activeTab.url : "";
+      var isPiazza = /^https:\/\/piazza\.com\//i.test(activeUrl);
+      var isResources = /\/resource/i.test(activeUrl);
+
+      if (!isPiazza) {
+        showMessage("This extension works only on Piazza. Open Piazza and then a Resources page.");
+        return;
+      }
+
+      if (!isResources) {
+        showMessage("You are on Piazza. Navigate to the course Resources page to list downloadable files.");
+        return;
+      }
+
       chrome.scripting.executeScript({
-       target: { tabId: activeTabs[0].id,
-        allFrames: true, 
-      },
+        target: { tabId: activeTab.id,
+          allFrames: true,
+        },
         files: ['scripts/send_links.js'],
         injectImmediately: true
-      });    
+      }, function() {
+        if (chrome.runtime.lastError) {
+          showMessage("Could not read this page. Refresh Piazza and open the Resources page.");
+          return;
+        }
+
+        setTimeout(function() {
+          if (!linksMessageReceived) {
+            showMessage("Could not detect resources on this page. Make sure you are on a Piazza Resources page.");
+          }
+        }, 500);
+      });
     });
   });
 };
