@@ -1,7 +1,6 @@
 var allLinks = [];
 var visibleLinks = [];
 var j = 0;
-
 //Display all visible links.
 function showLinks() {
   var linksTable = document.getElementById('links');
@@ -53,16 +52,18 @@ function downloadCheckedLinks() {
   window.close();
 }
 
-//send_links.js is injected into all frames of the active tab
-chrome.extension.onRequest.addListener(function(links) {
-  for (var index in links) 
-  {
-    allLinks.push(links[index]);
+// Replace the deprecated API //send_links.js is injected into all frames of the active tab
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.type === "links") {
+    var links = message.data;
+    for (var index in links) {
+      allLinks.push(links[index]);
+    }
   }
-  
+
   visibleLinks = allLinks;
   showLinks();
-  //hide or show buttons
+  // hide or show buttons
   if(!visibleLinks.length)
   {
 	document.getElementById('pText').innerHTML = "<style:text-align: center>" + "Navigate to <u>" + "Piazza Resources" +  "</u> to download available files";		
@@ -76,8 +77,7 @@ chrome.extension.onRequest.addListener(function(links) {
   }
 });
 
-// Set up event handlers and inject send_links.js into all frames in the active
-// tab.
+// Set up event handlers and inject send_links.js into all frames in the active tab
 window.onload = function() {
   document.getElementById('download0').onclick = downloadCheckedLinks;
   document.getElementById('download1').onclick = downloadCheckedLinks;
@@ -85,8 +85,13 @@ window.onload = function() {
   chrome.windows.getCurrent(function (currentWindow) {
 	  chrome.tabs.query({active: true, windowId: currentWindow.id},
                       function(activeTabs) {
-      chrome.tabs.executeScript(
-        activeTabs[0].id, {file: 'scripts/send_links.js', allFrames: true});    
+      chrome.scripting.executeScript({
+       target: { tabId: activeTabs[0].id,
+        allFrames: true, 
+      },
+        files: ['scripts/send_links.js'],
+        injectImmediately: true
+      });    
     });
   });
 };

@@ -13,7 +13,7 @@ if (window.location.href.indexOf("resource") > -1) { //only show the links from 
   var res = 'get_resource';
   if (res == href.substr(33, res.length)) 
   {
-	 file_names.push(element.text); 
+   file_names.push(element.text);
   }
   return href;
 }
@@ -35,8 +35,5 @@ for (var i = 0; i < links.length;) {
   
 }
 
-chrome.extension.sendRequest(links);
-chrome.extension.sendRequest(file_names);
-
-
-
+chrome.runtime.sendMessage({ type: "links", data: links });
+chrome.runtime.sendMessage({ type: "links", data: file_names });
