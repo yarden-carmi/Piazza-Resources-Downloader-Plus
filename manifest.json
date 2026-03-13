@@ -1,15 +1,13 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
   "manifest_version": 3,
-  "name": "Piazza Resources Downloader",
+  "name": "Piazza Resources Downloader+",
   "version": "2.1",
   "description": "A simple extension to easily select and download files from Piazza Resources page.",
   
   "action": {
     "default_icon": "images/download_symbol.png",
     "default_popup": "html/popup.html",
-	  "default_title": "Piazza Files Downloader"
+	  "default_title": "Piazza Files Downloader+"
  	},
  
   "permissions": [
