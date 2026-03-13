@@ -1,24 +1,39 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Piazza Resources Downloader</title>
 	<script src='../scripts/popup.js'></script>
 	<link rel="stylesheet" type="text/css" href="../css/popup.css">
 </head>
 <body>
-	<p id=pTitle>Piazza Resources Downloader <img src="../images/download_symbol.png" height="30px" width="30px" style="display:inline;"></p>
-	<p id="courseName"></p>
-	<hr>
-	<button id=download0 style="display:none;" >Download</button>
-		<p id=pText style="white-space:nowrap;"></p>
-		<table id=links>
- 			 <tr>
-    			<th>
-    				<input type=checkbox id=toggle_all style="display:none;">
-    			</th>
-   				<th align=left id=selectAll style="display:none;">
-   					Select all
-   				</th>
-  			</tr>
+	<header>
+		<p id="pTitle">
+			Piazza Resources Downloader
+			<img src="../images/download_symbol.png" height="20" width="20" alt="Download">
+		</p>
+		<p id="courseName"></p>
+	</header>
+
+	<main>
+		<button id="download0" style="display:none;">Download Selected</button>
+
+		<p id="pText"></p>
+
+
+		<div id="selectAllRow" style="display:none; padding:6px 8px; border-bottom:1px solid #e6e9ec;">
+			<input type="checkbox" id="toggle_all" style="vertical-align:middle; margin-right:8px;">
+			<label for="toggle_all" id="selectAllLabel">Select all</label>
+		</div>
+
+		<table id="links">
+			<tbody>
+				<!-- Links will be inserted here -->
+			</tbody>
 		</table>
-	<button id=download1 style="display:none;">Download</button>
+
+		<button id="download1" style="display:none;">Download Selected</button>
+	</main>
 </body>
 </html>

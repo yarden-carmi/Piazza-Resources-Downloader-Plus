@@ -9,23 +9,51 @@ function sanitizeFilename(name) {
 
 //Display all visible links.
 function showLinks() {
-  var linksTable = document.getElementById('links');
-  while (linksTable.children.length > 1) {
-    linksTable.removeChild(linksTable.children[linksTable.children.length - 1])
-  }
+  var linksTableBody = document.querySelector('#links tbody');
+  linksTableBody.innerHTML = '';
+
   for (var s = 0; s < visibleLinks.length; s++) {
     var section = visibleLinks[s];
-    // Section header
+    // Section header with checkbox
+    // add spacer between sections
+    if (s > 0) {
+      var spacerRow = document.createElement('tr');
+      spacerRow.className = 'section-spacer';
+      var spacerCell = document.createElement('td');
+      spacerCell.colSpan = 2;
+      spacerRow.appendChild(spacerCell);
+      linksTableBody.appendChild(spacerRow);
+    }
+
     var headerRow = document.createElement('tr');
-    var headerCell = document.createElement('td');
-    headerCell.colSpan = 2;
-    headerCell.innerHTML = '<strong>' + section.title + '</strong>';
-    headerCell.style.paddingTop = '10px';
-    headerRow.appendChild(headerCell);
-    linksTable.appendChild(headerRow);
+    var headerCol0 = document.createElement('td');
+    var headerCol1 = document.createElement('td');
+    var sectionCheckbox = document.createElement('input');
+    sectionCheckbox.checked = false;
+    sectionCheckbox.type = 'checkbox';
+    sectionCheckbox.id = 'section_check' + s;
+    sectionCheckbox.className = 'section-checkbox';
+    sectionCheckbox.onchange = function(sectionIndex) {
+      return function() {
+        var checked = this.checked;
+        var section = visibleLinks[sectionIndex];
+        for (var f = 0; f < section.files.length; f++) {
+          var cb = document.getElementById('check' + sectionIndex + '_' + f);
+          if (cb) cb.checked = checked;
+        }
+      };
+    }(s);
+    headerCol0.appendChild(sectionCheckbox);
+    headerCol0.className = 'section-checkbox-cell';
+    headerCol1.innerHTML = '<strong>' + section.title + '</strong>';
+    headerCol1.className = 'section-header';
+    headerRow.appendChild(headerCol0);
+    headerRow.appendChild(headerCol1);
+    linksTableBody.appendChild(headerRow);
     // Files
     for (var f = 0; f < section.files.length; f++) {
       var row = document.createElement('tr');
+      row.className = 'file-row';
       var col0 = document.createElement('td');
       var col1 = document.createElement('td');
       var checkbox = document.createElement('input');
@@ -36,12 +64,11 @@ function showLinks() {
       col1.innerText = section.files[f].name;
       col1.style.whiteSpace = 'nowrap';
       col1.onclick = function() {
-        var cb = this.previousElementSibling.querySelector('input');
-        cb.checked = !cb.checked;
+        checkbox.checked = !checkbox.checked;
       };
       row.appendChild(col0);
       row.appendChild(col1);
-      linksTable.appendChild(row);
+      linksTableBody.appendChild(row);
     }
   }
 }
@@ -50,6 +77,8 @@ function showLinks() {
 function toggleAll() {
  var checked = document.getElementById('toggle_all').checked;
   for (var s = 0; s < visibleLinks.length; s++) {
+    var sectionCb = document.getElementById('section_check' + s);
+    if (sectionCb) sectionCb.checked = checked;
     for (var f = 0; f < visibleLinks[s].files.length; f++) {
       var cb = document.getElementById('check' + s + '_' + f);
       if (cb) cb.checked = checked;
@@ -82,7 +111,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     allLinks = sections.map(section => ({
       title: section.sectionTitle,
       files: section.links.map((link, i) => ({url: link, name: section.file_names[i]}))
-    }));
+    })).filter(section => section.files.length > 0);
   }
 
   visibleLinks = allLinks;
@@ -91,14 +120,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // hide or show buttons
   if(!visibleLinks.length)
   {
-	document.getElementById('pText').innerHTML = "<style:text-align: center>" + "Navigate to <u>" + "Piazza Resources" +  "</u> to download available files";		
+	document.getElementById('pText').innerText = "Navigate to Piazza Resources to download available files";
+	document.getElementById('pText').style.display = "block";
   }
   else
   {
+	document.getElementById('pText').style.display = "none";
 	document.getElementById("download0").style.display = "block";
 	document.getElementById("download1").style.display = "block";
-	document.getElementById("toggle_all").style.display = "block";
-	document.getElementById("selectAll").style.display = "block";
+  document.getElementById("toggle_all").style.display = "inline-block";
+  document.getElementById("selectAllRow").style.display = "block";
   }
 });
 

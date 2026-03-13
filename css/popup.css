@@ -1,25 +1,228 @@
-#download0, #download1
-{
- 	background-color: #313636;
-	color: white;
-	font-size: 16px;
-	border-radius: 12px;
-	border: 2px solid #51B2F5;
-	padding: 14px 30px;
-	margin: 0 auto;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 16px;
+    min-width: 350px;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#pTitle {
+    font-weight: 600;
+    font-size: 16px;
+    color: #2c3e50;
+    text-align: center;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#pTitle img {
+    opacity: 0.8;
+}
+
+#courseName {
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    text-align: center;
+    margin: 0 0 16px 0;
+    padding: 8px 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: #dee2e6;
+    margin: 16px 0;
+}
+
+#download0, #download1 {
+    background: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+#download0:hover, #download1:hover {
+    background: #0056b3;
+}
+
+#pText {
+    font-weight: 500;
+    color: #6c757d;
+    text-align: center;
+    margin: 16px 0;
+    padding: 12px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+}
+
+#links {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+
+#links th {
+    background: transparent;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: none;
+}
+
+#links td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+#links tr:last-child td {
+    border-bottom: none;
+}
+
+#links tr:hover {
+    background: #f8f9fa;
+}
+
+#toggle_all {
+    cursor: pointer;
+}
+
+input[type='checkbox'] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ced4da;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type='checkbox']:checked {
+    background: #007bff;
+    border-color: #007bff;
 }
 
 input[type='checkbox']:checked:after {
-	background: #51B2F5;
-	content: '\2714';
-/* 	color: #fff; */
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-#pText{
-    font-weight: bold; 
+input[type='checkbox'].section-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #6c757d;
 }
 
-#pTitle{
-	font-weight: bold; 
-	font-size: 12px;
+input[type='checkbox'].section-checkbox:checked {
+    background: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Section headers */
+.section-header {
+    background: #e9ecef;
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 10px 12px 10px 8px !important;
+    border-bottom: 2px solid #adb5bd !important;
+    border-top: 1px solid #dee2e6;
+}
+
+.section-checkbox-cell {
+    background: #e9ecef;
+    border-bottom: 2px solid #adb5bd !important;
+    border-top: 1px solid #dee2e6;
+    padding-left: 8px;
+    vertical-align: middle;
+}
+
+/* file checkbox cell alignment */
+#links td:first-child {
+    width: 28px;
+    padding-left: 10px;
+}
+
+/* file rows should have white background to look like cards */
+.file-row td {
+    background: white;
+}
+
+/* make table look lighter */
+/* spacer row between sections */
+.section-spacer td {
+    height: 8px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+#links {
+    border: 1px solid #e6e9ec;
+}
+
+#links td[colspan="2"] strong {
+    color: #343a40;
+}
+
+/* File rows */
+#links td:nth-child(2) {
+    color: #424242;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+#links td:nth-child(2):hover {
+    color: #007bff;
+}
+
+/* compact alignment for header/select */
+#selectAll {
+    vertical-align: middle;
+    padding-left: 6px;
+    font-weight: 500;
+}
+
+#selectAllLabel {
+    cursor: pointer;
 }
