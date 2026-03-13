@@ -3,7 +3,7 @@
 
   "manifest_version": 3,
   "name": "Piazza Resources Downloader",
-  "version": "2.0",
+  "version": "2.1",
   "description": "A simple extension to easily select and download files from Piazza Resources page.",
   
   "action": {
