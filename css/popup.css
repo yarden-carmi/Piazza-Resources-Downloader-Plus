@@ -1,31 +1,53 @@
+:root {
+    color-scheme: light;
+    --bg: #f3f5f8;
+    --panel: #ffffff;
+    --surface: #f7f8fb;
+    --border: #e4e8ef;
+    --text: #1f2937;
+    --muted: #5f6b7a;
+    --accent: #3b82f6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f8f9fa;
-    color: #333;
+    font-family: 'Noto Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
     margin: 0;
-    padding: 16px;
-    min-width: 350px;
-    max-width: 500px;
-    border-radius: 8px;
+    padding: 10px;
+    width: 340px;
+}
+
+header,
+main {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
 }
 
 header {
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
 }
 
 main {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+    padding: 10px;
 }
 
 #pTitle {
-    font-weight: 600;
-    font-size: 16px;
-    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 650;
+    color: #111827;
     text-align: center;
-    margin: 0 0 12px 0;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,196 +55,227 @@ main {
 }
 
 #pTitle img {
-    opacity: 0.8;
+    width: 24px;
+    height: 24px;
+    display: block;
+    opacity: 0.85;
 }
 
 #courseName {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
-    color: #495057;
+    color: var(--muted);
     text-align: center;
-    margin: 0 0 16px 0;
-    padding: 8px 12px;
-    background: #e9ecef;
-    border-radius: 6px;
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
 }
 
-hr {
+#download0,
+#download1 {
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
     border: none;
-    height: 1px;
-    background: #dee2e6;
-    margin: 16px 0;
-}
-
-#download0, #download1 {
-    background: #007bff;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    margin: 8px 0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    margin: 0;
     cursor: pointer;
-    transition: background-color 0.2s ease;
     width: 100%;
+    transition: transform 0.08s ease, filter 0.08s ease;
 }
 
-#download0:hover, #download1:hover {
-    background: #0056b3;
+#download0:hover,
+#download1:hover {
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+}
+
+#download0:active,
+#download1:active {
+    transform: translateY(0);
 }
 
 #pText {
+    font-size: 12px;
     font-weight: 500;
-    color: #6c757d;
+    color: var(--muted);
     text-align: center;
-    margin: 16px 0;
-    padding: 12px;
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 6px;
+    margin: 0;
+    padding: 9px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
 }
 
-#links {
-    width: 100%;
-    border-collapse: collapse;
-    background: transparent;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #dee2e6;
+#selectAllRow {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
 }
 
-#links th {
-    background: transparent;
-    padding: 8px 12px;
-    text-align: left;
-    font-weight: 600;
-    color: #495057;
-    border-bottom: none;
-}
-
-#links td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #f1f3f4;
-}
-
-#links tr:last-child td {
-    border-bottom: none;
-}
-
-#links tr:hover {
-    background: #f8f9fa;
+#selectAllCheckboxCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    padding-right: 0;
+    margin: 0;
 }
 
 #toggle_all {
+    margin: 0;
     cursor: pointer;
-}
-
-input[type='checkbox'] {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #ced4da;
-    border-radius: 3px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-input[type='checkbox']:checked {
-    background: #007bff;
-    border-color: #007bff;
-}
-
-input[type='checkbox']:checked:after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-input[type='checkbox'].section-checkbox {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #6c757d;
-}
-
-input[type='checkbox'].section-checkbox:checked {
-    background: #6c757d;
-    border-color: #6c757d;
-}
-
-/* Section headers */
-.section-header {
-    background: #e9ecef;
-    font-weight: 600;
-    font-size: 14px;
-    color: #495057;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    padding: 10px 12px 10px 8px !important;
-    border-bottom: 2px solid #adb5bd !important;
-    border-top: 1px solid #dee2e6;
-}
-
-.section-checkbox-cell {
-    background: #e9ecef;
-    border-bottom: 2px solid #adb5bd !important;
-    border-top: 1px solid #dee2e6;
-    padding-left: 8px;
-    vertical-align: middle;
-}
-
-/* file checkbox cell alignment */
-#links td:first-child {
-    width: 28px;
-    padding-left: 10px;
-}
-
-/* file rows should have white background to look like cards */
-.file-row td {
-    background: white;
-}
-
-/* make table look lighter */
-/* spacer row between sections */
-.section-spacer td {
-    height: 8px;
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-#links {
-    border: 1px solid #e6e9ec;
-}
-
-#links td[colspan="2"] strong {
-    color: #343a40;
-}
-
-/* File rows */
-#links td:nth-child(2) {
-    color: #424242;
-    font-weight: 400;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-#links td:nth-child(2):hover {
-    color: #007bff;
-}
-
-/* compact alignment for header/select */
-#selectAll {
-    vertical-align: middle;
-    padding-left: 6px;
-    font-weight: 500;
+    width: 16px;
+    height: 16px;
 }
 
 #selectAllLabel {
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 8px 10px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+#links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel);
+}
+
+.section-header-row,
+.file-row {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    align-items: center;
+}
+
+.section-header-row {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.file-row {
+    border-bottom: 1px solid #edf0f5;
+}
+
+.file-row:last-child {
+    border-bottom: none;
+}
+
+.section-checkbox-cell,
+.file-checkbox-cell,
+.section-header,
+.file-name-cell {
+    padding: 8px 10px;
+}
+
+.section-checkbox-cell,
+.file-checkbox-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 0;
+}
+
+.file-name-cell {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    unicode-bidi: plaintext;
+}
+
+input[type='checkbox'] {
+    appearance: none;
+    display: block;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #c1c9d7;
+    border-radius: 4px;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.08s ease;
+    background: #ffffff;
+}
+
+input[type='checkbox']:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+input[type='checkbox']:indeterminate {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+input[type='checkbox']:checked:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 4px;
+    height: 8px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+input[type='checkbox']:indeterminate:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+}
+
+input[type='checkbox'].section-checkbox {
+    width: 16px;
+    height: 16px;
+}
+
+.section-header {
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    user-select: none;
+}
+
+.file-row:hover {
+    background: #f9fbff;
+}
+
+.file-row {
+    transition: background-color 0.08s ease;
 }

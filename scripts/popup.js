@@ -15,15 +15,13 @@ function hideMessage() {
 function hideSelectionUi() {
   document.getElementById('download0').style.display = 'none';
   document.getElementById('download1').style.display = 'none';
-  document.getElementById('toggle_all').style.display = 'none';
   document.getElementById('selectAllRow').style.display = 'none';
 }
 
 function showSelectionUi() {
   document.getElementById('download0').style.display = 'block';
   document.getElementById('download1').style.display = 'block';
-  document.getElementById('toggle_all').style.display = 'inline-block';
-  document.getElementById('selectAllRow').style.display = 'block';
+  document.getElementById('selectAllRow').style.display = 'grid';
 }
 
 function sanitizeFilename(name) {
@@ -31,27 +29,77 @@ function sanitizeFilename(name) {
   return name.replace(/[<>:"|?*\x00-\x1f]/g, '_').replace(/\//g, '-');
 }
 
+function updateSectionCheckboxState(sectionIndex) {
+  var section = visibleLinks[sectionIndex];
+  if (!section) return;
+
+  var sectionCheckbox = document.getElementById('section_check' + sectionIndex);
+  if (!sectionCheckbox) return;
+
+  var totalFiles = 0;
+  var checkedFiles = 0;
+
+  for (var f = 0; f < section.files.length; f++) {
+    var fileCheckbox = document.getElementById('check' + sectionIndex + '_' + f);
+    if (!fileCheckbox) {
+      continue;
+    }
+    totalFiles += 1;
+    if (fileCheckbox.checked) {
+      checkedFiles += 1;
+    }
+  }
+
+  sectionCheckbox.checked = totalFiles > 0 && checkedFiles === totalFiles;
+  sectionCheckbox.indeterminate = checkedFiles > 0 && checkedFiles < totalFiles;
+}
+
+function updateToggleAllState() {
+  var toggleAllCheckbox = document.getElementById('toggle_all');
+  if (!toggleAllCheckbox) return;
+
+  var totalFiles = 0;
+  var checkedFiles = 0;
+
+  for (var s = 0; s < visibleLinks.length; s++) {
+    for (var f = 0; f < visibleLinks[s].files.length; f++) {
+      var cb = document.getElementById('check' + s + '_' + f);
+      if (!cb) {
+        continue;
+      }
+      totalFiles += 1;
+      if (cb.checked) {
+        checkedFiles += 1;
+      }
+    }
+  }
+
+  toggleAllCheckbox.checked = totalFiles > 0 && checkedFiles === totalFiles;
+  toggleAllCheckbox.indeterminate = checkedFiles > 0 && checkedFiles < totalFiles;
+}
+
 //Display all visible links.
 function showLinks() {
-  var linksTableBody = document.querySelector('#links tbody');
-  linksTableBody.innerHTML = '';
+  var linksContainer = document.getElementById('links');
+  linksContainer.innerHTML = '';
+
+  document.getElementById('toggle_all').checked = false;
+  document.getElementById('toggle_all').indeterminate = false;
 
   for (var s = 0; s < visibleLinks.length; s++) {
     var section = visibleLinks[s];
-    // Section header with checkbox
-    // add spacer between sections
-    if (s > 0) {
-      var spacerRow = document.createElement('tr');
-      spacerRow.className = 'section-spacer';
-      var spacerCell = document.createElement('td');
-      spacerCell.colSpan = 2;
-      spacerRow.appendChild(spacerCell);
-      linksTableBody.appendChild(spacerRow);
-    }
+    var sectionCard = document.createElement('div');
+    sectionCard.className = 'section-card';
 
-    var headerRow = document.createElement('tr');
-    var headerCol0 = document.createElement('td');
-    var headerCol1 = document.createElement('td');
+    var headerRow = document.createElement('div');
+    headerRow.className = 'section-header-row';
+
+    var headerLeft = document.createElement('div');
+    headerLeft.className = 'section-checkbox-cell';
+
+    var headerTitle = document.createElement('div');
+    headerTitle.className = 'section-header';
+
     var sectionCheckbox = document.createElement('input');
     sectionCheckbox.checked = false;
     sectionCheckbox.type = 'checkbox';
@@ -59,55 +107,98 @@ function showLinks() {
     sectionCheckbox.className = 'section-checkbox';
     sectionCheckbox.onchange = function(sectionIndex) {
       return function() {
+        this.indeterminate = false;
         var checked = this.checked;
         var section = visibleLinks[sectionIndex];
         for (var f = 0; f < section.files.length; f++) {
           var cb = document.getElementById('check' + sectionIndex + '_' + f);
           if (cb) cb.checked = checked;
         }
+        updateToggleAllState();
       };
     }(s);
-    headerCol0.appendChild(sectionCheckbox);
-    headerCol0.className = 'section-checkbox-cell';
-    headerCol1.innerHTML = '<strong>' + section.title + '</strong>';
-    headerCol1.className = 'section-header';
-    headerRow.appendChild(headerCol0);
-    headerRow.appendChild(headerCol1);
-    linksTableBody.appendChild(headerRow);
+    headerLeft.appendChild(sectionCheckbox);
+    headerTitle.innerText = section.title;
+    headerRow.appendChild(headerLeft);
+    headerRow.appendChild(headerTitle);
+    headerRow.onclick = function(currentSectionCheckbox) {
+      return function(event) {
+        if (event.target && event.target.tagName === 'INPUT') {
+          return;
+        }
+        currentSectionCheckbox.checked = !currentSectionCheckbox.checked;
+        currentSectionCheckbox.dispatchEvent(new Event('change'));
+      };
+    }(sectionCheckbox);
+    sectionCard.appendChild(headerRow);
+
     // Files
     for (var f = 0; f < section.files.length; f++) {
-      var row = document.createElement('tr');
+      var row = document.createElement('div');
       row.className = 'file-row';
-      var col0 = document.createElement('td');
-      var col1 = document.createElement('td');
+
+      var col0 = document.createElement('div');
+      col0.className = 'file-checkbox-cell';
+
+      var col1 = document.createElement('div');
+      col1.className = 'file-name-cell';
+
       var checkbox = document.createElement('input');
       checkbox.checked = false;
       checkbox.type = 'checkbox';
       checkbox.id = 'check' + s + '_' + f;
+      checkbox.onchange = function(sectionIndex) {
+        return function() {
+          updateSectionCheckboxState(sectionIndex);
+          updateToggleAllState();
+        };
+      }(s);
+
       col0.appendChild(checkbox);
       col1.innerText = section.files[f].name;
-      col1.style.whiteSpace = 'nowrap';
-      col1.onclick = function() {
-        checkbox.checked = !checkbox.checked;
-      };
+      col1.title = section.files[f].name;
+
       row.appendChild(col0);
       row.appendChild(col1);
-      linksTableBody.appendChild(row);
+
+      row.onclick = (function(currentCheckbox, sectionIndex) {
+        return function(event) {
+          if (event.target && event.target.tagName === 'INPUT') {
+            return;
+          }
+          currentCheckbox.checked = !currentCheckbox.checked;
+          updateSectionCheckboxState(sectionIndex);
+          updateToggleAllState();
+        };
+      })(checkbox, s);
+
+      sectionCard.appendChild(row);
     }
+
+    linksContainer.appendChild(sectionCard);
   }
+
+  updateToggleAllState();
 }
 
 // Toggle the checked state of all visible links.
 function toggleAll() {
- var checked = document.getElementById('toggle_all').checked;
+  var toggleAllCheckbox = document.getElementById('toggle_all');
+  toggleAllCheckbox.indeterminate = false;
+  var checked = toggleAllCheckbox.checked;
+
   for (var s = 0; s < visibleLinks.length; s++) {
     var sectionCb = document.getElementById('section_check' + s);
-    if (sectionCb) sectionCb.checked = checked;
+    if (sectionCb) {
+      sectionCb.checked = checked;
+      sectionCb.indeterminate = false;
+    }
     for (var f = 0; f < visibleLinks[s].files.length; f++) {
       var cb = document.getElementById('check' + s + '_' + f);
       if (cb) cb.checked = checked;
     }
   }
+  updateToggleAllState();
 }
 
 // Download all visible checked links.

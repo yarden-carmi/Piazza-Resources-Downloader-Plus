@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Alignment Test - Piazza Resources Downloader</title>
+	<link rel="stylesheet" type="text/css" href="../css/popup.css">
+</head>
+<body>
+	<header>
+		<p id="pTitle">
+			Piazza Resources Downloader+
+			<img src="../images/download_symbol.png" height="20" width="20" alt="Download">
+		</p>
+		<p id="courseName">CS 101: Introduction to Computer Science</p>
+	</header>
+
+	<main>
+		<button id="download0">Download Selected</button>
+
+		<div id="selectAllRow">
+			<div id="selectAllCheckboxCell">
+				<input type="checkbox" id="toggle_all">
+			</div>
+			<label for="toggle_all" id="selectAllLabel">Select all</label>
+		</div>
+
+		<div id="links">
+			<!-- Section 1: HOMEWORK -->
+			<div class="section-card">
+				<div class="section-header-row">
+					<div class="section-checkbox-cell">
+						<input type="checkbox" class="section-checkbox" id="section_check0">
+					</div>
+					<div class="section-header">HOMEWORK</div>
+				</div>
+				<div class="file-row">
+					<div class="file-checkbox-cell">
+						<input type="checkbox">
+					</div>
+					<div class="file-name-cell">לחברותיו-צילומית.pdf</div>
+				</div>
+			</div>
+
+			<!-- Section 2: LECTURE NOTES -->
+			<div class="section-card">
+				<div class="section-header-row">
+					<div class="section-checkbox-cell">
+						<input type="checkbox" class="section-checkbox" id="section_check1">
+					</div>
+					<div class="section-header">LECTURE NOTES</div>
+				</div>
+				<div class="file-row">
+					<div class="file-checkbox-cell">
+						<input type="checkbox">
+					</div>
+					<div class="file-name-cell">1-intro.pdf</div>
+				</div>
+				<div class="file-row">
+					<div class="file-checkbox-cell">
+						<input type="checkbox">
+					</div>
+					<div class="file-name-cell">2-regs_and_memory.pdf</div>
+				</div>
+				<div class="file-row">
+					<div class="file-checkbox-cell">
+						<input type="checkbox">
+					</div>
+					<div class="file-name-cell">3+4-memory_addressing_and_instructio...</div>
+				</div>
+			</div>
+		</div>
+
+		<button id="download1">Download Selected</button>
+	</main>
+</body>
+</html>

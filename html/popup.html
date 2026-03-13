@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Piazza Resources Downloader</title>
-	<script src='../scripts/popup.js'></script>
+	<script src='../scripts/popup.js' defer></script>
 	<link rel="stylesheet" type="text/css" href="../css/popup.css">
 </head>
 <body>
@@ -22,16 +22,14 @@
 		<p id="pText"></p>
 
 
-		<div id="selectAllRow" style="display:none; padding:6px 8px; border-bottom:1px solid #e6e9ec;">
-			<input type="checkbox" id="toggle_all" style="vertical-align:middle; margin-right:8px;">
+		<div id="selectAllRow" style="display:none;">
+			<div id="selectAllCheckboxCell">
+				<input type="checkbox" id="toggle_all">
+			</div>
 			<label for="toggle_all" id="selectAllLabel">Select all</label>
 		</div>
 
-		<table id="links">
-			<tbody>
-				<!-- Links will be inserted here -->
-			</tbody>
-		</table>
+		<div id="links" aria-live="polite"></div>
 
 		<button id="download1" style="display:none;">Download Selected</button>
 	</main>
